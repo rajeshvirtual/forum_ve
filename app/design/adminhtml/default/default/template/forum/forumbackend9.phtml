@@ -1,0 +1,272 @@
+<?php
+/**
+* Virtual Employee Forum
+* 
+* @category     VE
+* @package      Ve_Forum
+* @copyright    Copyright (c) 2016 VE (http://www.virtualemployee.com/)
+* @author       VE (Magento Team)
+* @version      Release: 1.0.0.1
+*/
+?>
+<?php $orderID = $this->getRequest()->getParam('id');
+$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+$result = $read->fetchAll("SELECT * FROM forum WHERE forum_id='$orderID'");
+ foreach($result as $cat) {
+ ?>
+<script type="text/javascript">
+ function show_parent_category(){ 
+	   var x = document.getElementById("store").value;
+           new Ajax.Request("<?php echo  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/kj') ; ?>", {
+               method: 'Post',
+               parameters: {store:x},
+               onComplete: function(transport) {
+				 var container = document.getElementById("pc");
+                container.innerHTML = transport.responseText;
+
+               }
+           });
+           new Ajax.Request("<?php echo  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/workjkkjjk') ; ?>", {
+               method: 'Post',
+			   parameters: {store:x},
+               onComplete: function(transport) {
+				 var container = document.getElementById("topic");
+                container.innerHTML = transport.responseText;
+
+               }
+           });
+       }
+</script>
+<script type="text/javascript">
+ function show_sub_category(){
+	   var x = document.getElementById("pc").value;
+           new Ajax.Request("<?php echo  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/jkkj') ; ?>", {
+               method: 'Post',
+               parameters: {pc:x},
+               onComplete: function(transport) {
+				var container = document.getElementById("textfield2");
+				var option = eval ("(" + transport.responseText + ")");
+                container.innerHTML = option[0];
+				var product = document.getElementById("textfield3");
+                product.innerHTML = option[1];
+				
+
+               }
+           });
+       }
+</script>
+<script type="text/javascript">
+ function show_product_category(){
+	   var x = document.getElementById("textfield2").value;
+           new Ajax.Request("<?php echo  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/workjkkj') ; ?>", {
+               method: 'Post',
+               onComplete: function(transport) {
+				 var container = document.getElementById("textfield3");
+                container.innerHTML = transport.responseText;
+
+               }
+           });
+       }
+</script>
+
+<?php 
+$orderID =  $this->getRequest()->getParam('id');
+ 
+?>
+
+<?php
+$admin_user_session = Mage::getSingleton('admin/session');
+$adminuserId = $admin_user_session->getUser()->getUserId();
+$userArray = Mage::getSingleton('admin/session')->getData();
+$user = Mage::getSingleton('admin/session'); 
+$userUsername = $user->getUser()->getUsername();
+$result3 = $read->fetchAll("select root_category_id from core_store_group");
+           foreach($result3 as $cat3) {
+			$rcid=$cat3['root_category_id'];
+				}
+$url =  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/update') ;
+$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+$result4 = $read->fetchAll("select * from cat WHERE userid='$adminuserId' order by cat_id desc");
+	
+?>
+  	
+ <div style="margin: 0 auto; width: 50%; border: 1px solid #CCC; padding: 12px;background-color: rgb(246, 246, 246);">
+ <form name="jitu" method="post" action="<?php echo $url;?> ">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <th style="border-bottom: 1px #CCC dashed;padding-bottom:10px;">Forum Topic</th>
+	<td><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /></td>
+	<td><input name="websiteid" type="hidden" value="<?php echo $sw ?>" /></td>
+	<td><input name="userid" type="hidden" value="<?php echo $userUsername;?>" /></td>
+	<td><input name="updateid" type="hidden" value="<?php echo $orderID;?>" /></td>
+	
+  </tr>
+  
+  <tr>
+    <td valign="top" style="padding:10px 0;"><table width="100%" border="0" cellspacing="5" cellpadding="5">
+	
+	
+	<tr>
+	
+	<?php   
+     if ($sw){
+	$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+	 $result = $read->fetchAll("select * from core_store_group WHERE website_id = $sw and root_category_id!=0");
+	 }
+else{
+	$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+	 $result = $read->fetchAll("select * from core_store_group WHERE root_category_id!=0");
+}
+	 ?>
+        <td class="label" width="18%" style="vertical-align:middle;padding:5px 0">Store Name</td>
+        <td width="82%">  <select name="store" id="store" onchange="show_parent_category()" style="width:36%">
+                                <option value="" selected="selected">Select Store</option>
+                                <?php 
+					foreach($result as $cat1) {
+						
+						?>
+											<option value="<?=ucwords($cat1['website_id'])?>" <?php if(ucwords($cat['store'])==ucwords($cat1['website_id'])) { echo "selected"; }?>><?=ucwords($cat1['name'])?></option>
+									<?php 
+									}?>
+                            </select></td>
+      </tr>
+	  <tr>
+	
+        <td class="label" width="18%" style="vertical-align:middle;padding:5px 0">Forum Category</td>
+        <td width="82%">  <select name="topic" id="topic" style="width:36%">
+                               <option value="" selected="selected" >Select Forum Category</option>
+							   <?php if(!empty($cat['forumcategory'])){?><option value="<?=$cat['forumcategory']?>" selected><?=$cat['forumcategory']?></option> <?php } ?>
+                            </select></td>
+      </tr>
+     <tr>
+        <td class="label" width="18%" style="vertical-align:middle;padding:5px 0">Parent Category</td>
+        <td width="82%">
+		<p id="demo"></p><?php //print_r($cat);exit;?>
+		<select name="pc" id="pc" onchange="show_sub_category()" style="width:36%">
+                                <option value="" selected="selected">Select Parent Category</option>
+								<?php if(!empty($cat['parentcategory'])){?><option value="<?=$cat['parentcategory']?>" selected><?=$cat['parentcategory']?></option> <?php } ?>
+                       </select></td>
+      </tr>
+      <tr>
+        <td style="vertical-align:middle;padding:5px 0">Sub Category</td>
+        <td><select name="textfield2" id="textfield2" onchange="show_product_category()" style="width:36%">
+                                <option value="" selected="selected">Select Sub Category</option>
+								<?php if(!empty($cat['subcategory'])){?><option value="<?=$cat['subcategory']?>" selected><?=$cat['subcategory']?></option> <?php } ?>
+                       </select></td>
+      </tr>
+      <tr>
+        <td style="vertical-align:middle;padding:5px 0">Product</td>
+        <td><select name="textfield3" id="textfield3" style="width:36%">
+                                <option value="" selected="selected">Select Product</option>
+								<?php if(!empty($cat['product'])){?><option value="<?=$cat['product']?>" selected><?=$cat['product']?></option> <?php } ?>
+                       </select></td>
+      </tr>
+      <tr>
+        <td style="vertical-align:middle;padding:5px 0 43px">Forum Topic</td>
+        <td style="padding-bottom:15px;"><textarea name="textfield4" id="textfield4" style="width:35%"/><?=$cat['message']?> </textarea>
+		</td>
+      </tr>
+      <tr>
+	  <td colspan="2" style="border-top:1px solid rgb(128, 128, 128);"></td>
+	  </tr>
+     <tr>
+        <td align="right"  style="vertical-align:middle;padding:5px 0">&nbsp;</td>
+        <td style="vertical-align:middle;padding:11px 0 0"><button class="btn btn-primary"  name="submit" type="submit" onclick="return validateForm()">Add Topic</button></td>
+      </tr>
+    </table></td>
+  </tr>
+  
+</table>
+</form>
+     </div>
+ 
+<script>
+$(function() {
+		$("#parentCat").live('change', function(){
+			var cat_id = $(this).attr('value'); //alert(element); return false;
+		
+			//var del_id = element.attr("id"); //alert(del_id); return false;
+			var info = 'cat_id=' + cat_id; //alert(info); //return false;
+		
+			 $.ajax({
+				 type: "POST",
+				 url: "lib/updateSubcategory.php?"+info,
+				 data: info,
+				 success: function(res){
+				 	$("#subCategory").html(res);
+				}
+			});
+		});
+	});
+</script>
+
+<script type="text/javascript">
+function validateForm() {
+
+     if (document.getElementById('store').value =='') {
+        alert("Please select store before create forum topic.");
+        return false;
+    }
+	 
+    if (document.getElementById('topic').value =='') {
+        alert("Please select/create forum category before create forum topic.");
+        return false;
+    }
+	  if (document.getElementById('pc').value =='') {
+        alert("Please select parent category before create forum topic.");
+        return false;
+    }
+	  if (document.getElementById('textfield3').value =='') {
+        alert("Please select product name for a topic.");
+        return false;
+    }
+}
+</script>
+
+<script language="javascript">   
+function validate() 
+{	
+		var topic=document.getElementById("topic").value;
+		if(topic=="")
+		{
+			hideAllErrorssign();
+			document.getElementById("topic_erroe").style.display = "inline";
+			document.getElementById("topic").focus();
+			return false;
+		}	
+		
+		var parentCat=document.getElementById("parentCat").value;
+		if(parentCat=="")
+		{
+			hideAllErrorssign();
+			document.getElementById("parentCat_er").style.display = "inline";
+			document.getElementById("parentCat").focus();
+			return false;
+		}	
+		
+		var produc=document.getElementById("produc").value;
+		if(produc=="")
+		{
+			hideAllErrorssign();
+			document.getElementById("produc_er").style.display = "inline";
+			document.getElementById("produc").focus();
+			return false;
+		}
+		
+}
+	
+function hideAllErrorssign() 
+{
+	document.getElementById("topic_erroe").style.display = "none";
+	document.getElementById("parentCat_er").style.display = "none";
+	document.getElementById("produc_er").style.display = "none";
+	
+		
+}
+</script>
+
+<?php } ?>

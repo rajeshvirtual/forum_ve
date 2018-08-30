@@ -1,0 +1,67 @@
+<?xml version="1.0"?>   
+<layout version="0.0.9">  
+<default>
+    <reference name="top.menu">
+     <!--Note: use custom block file for menu drawing and default template file-->
+      <block type="forum/navigation" name="newmenu.topnav" template="catalog/navigation/top.phtml">
+      </block>
+    </reference>
+  </default> 
+<forum_index_index> 
+<reference name="head">
+   <action method="addCss">
+       <stylesheet>css/forum/custom.css</stylesheet>
+    </action>
+</reference>  
+ <reference name="root">   
+      <action method="setTemplate"><template>page/1column.phtml</template></action>   
+ </reference>   
+ <reference name="content">   
+      <block type="forum/index" name="forum_index" template="forum/index.phtml"/>   
+    </reference>   
+ </forum_index_index>
+ <forum_index2_index>   
+		<reference name="head">
+            <action method="addCss">
+                <stylesheet>css/forum/custom.css</stylesheet>
+            </action>
+            <action method="addJs"><file>mage/captcha.js</file></action>  
+		</reference>
+		<reference name="root">   
+		<action method="setTemplate"><template>page/1column.phtml</template></action>   
+		</reference>   
+		<reference name="content">   
+	<block type="forum/index2" name="forum_index2" template="forum/index2.phtml">  
+	<block type="forum/captcha" name="captcha">
+	                    <reference name="head">
+                        <action method="addJs"><file>mage/captcha.js</file></action>
+                    </reference>
+     <action method="setFormId">
+        <id>form-validate-captcha</id>
+    </action>
+    <action method="setImgWidth">
+        <width>300</width>
+    </action>
+    <action method="setImgHeight">
+        <height>40</height>
+    </action>
+	</block> 
+	</block>
+	
+		</reference>   
+  </forum_index2_index> 
+  <forum_index_new>   
+  <reference name="head">
+            <action method="addCss">
+                <stylesheet>css/forum/custom.css</stylesheet>
+            </action>
+        </reference>
+  <reference name="root">   
+     <action method="setTemplate"><template>page/1column.phtml</template></action>   
+		</reference>   
+  <reference name="content">   
+    <block type="forum/index" name="forum_index" template="forum/index.phtml"/>   
+		</reference>   
+  </forum_index_new> 
+  </layout>   
+	

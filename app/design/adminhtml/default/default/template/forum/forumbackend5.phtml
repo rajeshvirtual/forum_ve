@@ -1,0 +1,60 @@
+<?php
+/**
+* Virtual Employee Forum
+* 
+* @category     VE
+* @package      Ve_Forum
+* @copyright    Copyright (c) 2016 VE (http://www.virtualemployee.com/)
+* @author       VE (Magento Team)
+* @version      Release: 1.0.0.1
+*/
+?>
+<?php 
+$orderID = $this->getRequest()->getParam('id'); 
+$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+$result = $read->fetchAll("SELECT * FROM qa WHERE qa_id='$orderID'");
+ foreach($result as $cat) {
+?>
+               <?php   
+			   $url =  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/edit1') ;
+			   ?>
+<div style="margin: 0 auto; width: 50%; border: 1px solid #CCC; background-color:rgb(246, 246, 246); padding: 12px;">
+     <div style="border-bottom: 1px #CCC dashed; padding-bottom:10px;">Manage Questions</div>
+                     <form class="form-horizontal uni" method="post" action="<?php echo $url;?>" >
+					 <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+					 <input name="id" type="hidden" value="<?=$orderID ?>" />
+					 <input type="hidden" name="email" value="<?=$cat['useremail']?>" />
+                     	<div class="control-group" style="padding:10px 0px;">
+                        <label class="control-label" for="inputPassword">Questions</label>
+                        <div class="controls">
+                     <textarea name="questions" class="uniform"  style="width:80%; margin-top: 9px;"><?=$cat['question']?></textarea>
+                        </div>
+                      </div>
+					  <div class="control-group" style="margin-bottom:15px;">
+                    <label class="control-label" for="inputPassword" style="float:left; margin-right:10px;">Status</label>
+                    <div class="controls">
+                        <select name="status">
+                            <option value="1" <?php if($cat['status'] ==1 ) echo "selected";?>>Active</option>
+                            <option value="0" <?php if($cat['status'] ==0 ) echo "selected";?>>Inactive</option>
+                        </select>
+                    </div>
+                      </div>
+
+                      <hr style="margin:10px 0px;" /> 
+                     <!-- <button type="submit" class="btn">Default</button>-->
+					
+                      <button type="submit" name="submit" class="btn btn-primary">Update</button>
+                    
+                    </form>
+                 
+</div>
+		<!-- Matter ends -->
+
+    
+ <?php } ?>
+
+
+
+</body>
+</html>

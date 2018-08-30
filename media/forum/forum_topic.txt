@@ -1,0 +1,15 @@
+Forum Topic Extension :
+
+1: work like a support tickets on products
+2: work like a FAQ
+3: work like a blog 
+4: Customer can create a ticket on specific product and specific topic.
+5: Admin  has to power enable or disable question and answeres as well .
+
+We provide this extension free to our users..
+
+
+
+
+Thanks
+

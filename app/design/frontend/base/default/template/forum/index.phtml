@@ -1,0 +1,106 @@
+<?php
+/**
+* Virtual Employee Forum
+* 
+* @category     VE
+* @package      Ve_Forum
+* @copyright    Copyright (c) 2016 VE (http://www.virtualemployee.com/)
+* @author       VE (Magento Team)
+* @version      Release: 1.0.0.1
+*/
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+<?php 
+	$storeId =  Mage::app()->getWebsite()->getId();
+	$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+    $result = $read->fetchAll("select * from forum GROUP BY forumcategory  ");
+?>
+
+<div class="container">
+ 		<!--tittle-->
+       <div class="row">
+       		<div class="col-md-12">
+             <!-- t-->
+             	<div class="newTitleDiv clearfix">
+				<h2 class="newTitleNoBg">Forum Topic</h2>
+                
+				<div class="newTitleShadow"></div>
+				<div class="newTitleBg"></div>
+			    </div>
+             <!-- t-->
+            </div>
+        </div>
+        <!--tittle-->
+        <!-- register form-->
+         <div class="row">
+         <div class="col-md-12">
+         <div class="contentBox contentBox2 contentBox3" id="ajaxwork">         	
+            <div style="margin:0 auto;">
+            
+            
+<?php 
+					foreach($result as $cat) {
+						
+						?>
+
+
+	<table width="100%" border="0" class="forum-topic"  cellspacing="0" cellpadding="0">
+										  <tr>
+<td width="100%" align="left" valign="top" colspan="4" style="background:#435470; font-size:20px; color:#FFF; padding:6px 20px;">Forum Category: <span style=" font-weight:bold;"><?=ucwords($cat['forumcategory'])?></span></td>
+					
+					  </tr> 
+                      <tr>      
+		  <?php
+		  	$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+    $result2 = $read->fetchAll("select * from forum where forumcategory = '".$cat['forumcategory']."'"); ?>
+	
+	<?php 
+					foreach($result2 as $cat1) {
+						?>
+		
+<?php $url= Mage::getBaseUrl();
+$new1=$cat1['forum_id'];
+$result3 = $read->fetchAll("select count(topic_id) as totalCount from qa where topic_id=$new1 and status=1"); 
+foreach($result3 as $new) {	
+?> 				
+<tr>
+<td width="4%" align="center" valign="middle"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)?>forum/chat.png" /></td>
+<td width="30%" align="left" valign="top"><a href="<?php echo $url;?>forum/index2/?order_id=<?=$cat1['forum_id']?>"><?=$cat1['message'] ?></a>  (<?php echo $new['totalCount'] ; ?> Comments) 
+
+<p><table border="0" class="forum-topic-details" cellspacing="0" cellpadding="0">
+<tr style="background:none;">
+<td  valign="top"><strong>Related to::</strong> <a href="" class="productlink"><?=$cat1['product']?></a> |</td>
+<td  valign="top"><span class="postedby"><strong>Posted By::</strong> <?=$cat1['userid']?></span>|</td>
+<?php //$newdate= date('d.m.y ',strtotime($cat1['date']) ); ?>
+<td  valign="top" ><span class="postedby"><strong>Posted:: </strong><?php echo Mage::helper('core')->formatDate($cat1['date'], Mage_Core_Model_Locale::FORMAT_TYPE_FULL, false);?></span></td></tr></table></p>
+
+</td>
+</tr>
+
+
+					
+                </tr>
+ 
+<?php } }
+?>
+</table>
+<?php }?>	
+            </div>
+            </div>
+        </div>
+        </div>
+
+</div>
+<aside class="col-left sidebar"><?php echo $this->getChildHtml('left') ?></aside>
+</body>
+</html>

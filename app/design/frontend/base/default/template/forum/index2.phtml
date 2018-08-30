@@ -1,0 +1,431 @@
+<?php
+/**
+* Virtual Employee Forum
+* 
+* @category     VE
+* @package      Ve_Forum
+* @copyright    Copyright (c) 2016 VE (http://www.virtualemployee.com/)
+* @author       VE (Magento Team)
+* @version      Release: 1.0.0.1
+*/
+?>
+
+<!DOCTYPE html>
+
+<!--[if lt IE 7 ]> <html lang="en" id="top" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" id="top" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" id="top" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" id="top" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" id="top" class="no-js"> <!--<![endif]-->
+
+<?php
+    $orderID = $_GET['order_id']; 
+    $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+	$result = $read->fetchAll("select * from forum WHERE forum_id='$orderID'");
+	foreach($result as $cat1) {
+				 $d=$cat1['product'];
+	}
+$status=0;
+$storeId = Mage::app()->getStore()->getStoreId();
+$urlanswer =  Mage::getUrl('forum/index/answer') ;
+$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
+if($session->isLoggedIn()){
+$value=1;
+} else {
+$value=0;
+}
+$demo = $this->getChildHtml('captcha');
+	?>
+<head>
+<?php echo $this->getChildHtml('head') ?> 
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.0/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+	setTimeout(function(){
+		$("div.forum-comment-section").click(function(){
+			$(this).next().slideToggle(500);
+			$(this).toggleClass('rest');
+		});
+		
+		$("div.forum-comment-reply").click(function(){
+			$(this).next().slideToggle(500);
+			$(this).toggleClass('rest');
+		});
+	}, 200);
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+var currentId = '';
+function handleform(id){
+	console.log($(this));
+    $("#replyForm").fadeOut(200);
+    $("#replyForm").remove();
+	$('#hiddenForm div').attr('id', 'replyForm');
+	$('#hiddenForm #ans_id').val(id);
+	var $div = $('#hiddenForm').html();
+	$('#hiddenForm div').attr('id', 'demo');
+	$('a#' + id).parent().append($div);
+    $("#replyForm").fadeIn(200);
+	$('a#closeForm').click(function(){
+		$(this).parent().fadeOut(500);
+	});
+   currentID = id;
+	}$('div.forum-btn a').click(function(e){
+    e.preventDefault();
+    var id = $(this).attr('id');
+    if(currentId != ''){
+        if(currentId == id){
+            // Just Remove the Form and not show again
+            $("#replyForm").fadeOut(200);
+            $("#replyForm").remove();
+        } else {
+            // Remove other forms and show them here
+            handleform(id);
+        }
+    } else {
+        handleform(id);
+    }
+});});
+</script>
+
+<script language="javascript">
+function validate()
+{
+ if (document.getElementById('author').value =='') { 
+        alert("Please Enter Your Name.");
+        return false;
+    }
+	var validate_char= /^[\w\-\.\+]+\@[a-zA-Z0-9\.\-]+\.[a-zA-z0-9]{2,4}$/;
+    if(!document.cform.email.value.match(validate_char))
+		{
+		alert("Please enter a valid email address.");
+		return false;
+		}
+	  if (document.getElementById('comment2').value =='') {
+        alert("Please Enter your Post.");
+        return false;
+    }
+}	
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#load").click(function(){
+	$('.layout').fadeIn();
+    loadmore();
+	$(".old").css("display", "none");
+	$(".loadmore").css("display", "none");
+	 bindButtonClick();
+  });
+});
+function bindButtonClick(){
+   $(document).ready(function(){
+		$("div.forum-comment-section").click(function(){
+			$(this).next().slideToggle(500);
+			$(this).toggleClass('rest');
+		});
+		
+		$("div.forum-comment-reply").click(function(){
+			$(this).next().slideToggle(500);
+			$(this).toggleClass('rest');
+		});
+		
+	}, 200);
+}
+
+
+function loadmore()
+{
+  var val = document.getElementById("result_no").value;
+  var val1 = document.getElementById("forum_id").value;
+ 
+  $.ajax({
+  type: 'post',
+  url: 'load',
+  data: {
+    getresult:val,
+	getid:val1,
+	
+	
+  },
+  
+  success: function (response) {
+	$('.layout').fadeOut();
+    var content = document.getElementById("result_para");
+    content.innerHTML = content.innerHTML+response;
+	// We increase the value by 100 because we limit the results by 2
+    document.getElementById("result_no").value = Number(val)+2;
+	bindButtonClick();  
+	$('html, body').animate({ scrollTop: $('#result_para').offset().top - 100}, 400);
+	
+	}
+  });
+}
+</script>
+
+</head>
+<body<?php echo $this->getBodyClass()?' class="'.$this->getBodyClass().'"':'' ?>>
+<?php echo $this->getChildHtml('after_body_start') ?>
+<div class="layout">
+	<img src="<?php echo $this->getSkinUrl('images/forum/ajax-loader.gif')?>" alt="" />
+</div>
+<div id="forum-page">
+    <?php echo $this->getChildHtml('global_notices') ?>
+   <div class="page">
+        <?php echo $this->getChildHtml('header') ?>
+		<?php echo $this->getChildHtml('home_content') ?>
+        <section class="main-container">
+            <div class="forum-page-wrap"> 
+ <?php
+$product_name = $d; //product name
+$urlanswer =  Mage::getUrl('forum/index/answer') ;
+$model = Mage::getModel('catalog/product');
+$collection = $model->getCollection(); 
+foreach ($collection as $product) //loop for getting products
+{                                  
+    $model->load($product->getId());
+    $pname = $model->getName();  
+    if(strcmp($pname,$product_name)==0)
+    {
+    $id = $product->getId();
+    }               
+}
+$model = Mage::getModel('catalog/product') ;
+$_product = $model->load($id); ?>
+
+
+                <article class="forum-product-content">
+				<div class="forum-product-image"><img src=" <?php echo $_product->getImageUrl();?>" alt="Product"></div>
+                 	<?php echo $this->getChildHtml('breadcrumbs') ?>
+				    <?php echo $this->getChildHtml('global_messages') ?>
+                    <?php //echo $this->getChildHtml('content') ?>
+				    <div class="container commn-container"> 
+      <?php					
+	$urlmain =  Mage::getUrl('forum/index/new') ;
+	?>			
+	   <div class="newTitleShadow"></div>
+	   <div class="newTitleBg"></div>
+	<?php
+    $orderID = $_GET['order_id']; 
+    $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+	$result = $read->fetchAll("select * from forum WHERE forum_id='$orderID'");
+	foreach($result as $cat1) {
+				 $rid=$cat1['role_id'];
+	?>
+    <div class="cat-list-cta">
+    <ul>
+    	<li><a href="#">Forum Category: <Span><?=$cat1['forumcategory']?></Span></a></li>
+        <li><a href="#">Parent Category: <span><?=$cat1['parentcategory']?></span></a></li>
+        <li><a href="#">Product: <span><?=$cat1['product']?></span></a></li>
+    </ul></div>
+	<div class="col-md-3 registerBox" style="margin-top:0;">
+	<h2 style="border-bottom: 1px dashed #CCC; color:#f6814c; padding-bottom:12px; font-size:38px; font-weight:bold;text-transform:none;">Topic:<?=$cat1['message']?></h2>
+
+	
+  <div class="posted-section">
+  
+  <div class="posted-thumnail"><img src="<?php echo Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)?>forum/avtar.png" height="80px" width="80px" /></div>
+  <div class="posted-content">
+ 
+   <div class="posted-title">Posted By: <span><?=$cat1['userid']?></span></div>
+   <div class="posted-title">Date/Time:<span><?=$cat1['date']?></span></div>
+ 
+  </div>
+   <div class="clear"></div>
+    </div>
+</div>	
+	
+ <div class="col-md-6 registerBox">
+<span><h2 class="comment">Comments: <a href="#respond" class="postcomment">Post Your Question</a></h2></span>
+<?php
+	Mage::getSingleton('core/session', array('name'=>'frontend'));
+	$session = Mage::getSingleton('customer/session', array('name'=>'frontend')); 
+	if($session->isLoggedIn()){
+	$customer = Mage::getSingleton('customer/session')->getCustomer();
+	$custEmail = $customer->getEmail();}
+	$read = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+	$AllQuestions = $read->fetchAll("SELECT * FROM  qa where topic_id = '$cat1[forum_id]' and status=1 limit 0,50 ");
+	$cnt=count($AllQuestions);
+	 ?>
+	
+	<div id="result_para">
+	<?php
+	function category_list($ans_id = 0, $AllQuestions = array()) {
+	   // build our category list only once
+	   $cats = $AllQuestions;
+	   // populate a list items array
+	   $list_items = array();
+	   foreach($cats as $cat) {
+	   //echo "<pre>"; print_r($cat); echo "</pre>";
+	    if ($cat['type']==1){
+		  $src= Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."forum/login-user.png"; 
+		  }
+		  else { 
+		  $src= Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_MEDIA)."forum/logout-user.png"; 
+		  }
+		  
+		  // if not a match, move on
+		  if (( int )$cat['ans_id'] !== ( int)$ans_id) {
+			 continue;
+		  }
+		  // open the list item
+		  if($cat['ans_id'] != 0){
+			// This is an Answer/ Reply
+			$list_items[] = '<div class="forum-comment-reply">';
+			$list_items[] = '<div class="user-profile-pic">';
+			$list_items[] = '<img class="avatar avatar-50 photo" src="'.$src.'" width="50" height="50"  alt="" />';
+			$list_items[] = '</div>';
+			$list_items[] = '<div class="user-comment-box">';
+			$list_items[] = '<h5>By-<b style="color:#136A76;">' . $cat['name'] . '</b></h5>';
+			$list_items[] = '<p>' . $cat['answer'] . '</p>';
+			$list_items[] = '</div>';
+			$list_items[] = '<div class="forum-btn"><a href="#" class="btn btn-reply" id="'.$cat['qa_id'].'">Reply</a></div>';
+			$list_items[] = '<div class="clear"></div>';
+			$list_items[] = '</div>';
+		  } else {
+			// This is a Question
+			$list_items[] = '<div class="forum-comment-section">';
+			$list_items[] = '<div class="user-profile-pic">';
+			$list_items[] = '<img class="avatar avatar-50 photo" src="'.$src.'" width="50" height="50  alt=" "="">';
+			$list_items[] = '</div>';
+			$list_items[] = '<div class="user-comment-box">';
+			$list_items[] = '<h5>By-<b style="color:#136A76;">' . $cat['name'] . '</b></h5>';
+			$list_items[] = '<p>Question : ' . $cat['question'] . '</p>';
+			$list_items[] = '</div>';
+			$list_items[] = '<div class="forum-btn"><a href="#" class="btn btn-comment" id="'.$cat['qa_id'].'">Comment</a></div>';
+			$list_items[] = '<div class="clear"></div>';
+			$list_items[] = '</div>';
+		  }
+		 
+		  $list_items[] = category_list($cat['qa_id'], $AllQuestions);
+		  // close the list item
+		  // $list_items[] = '</div>';
+	   }
+	   // convert to a string
+	   $list_items = implode('', $list_items);
+	   // if empty, no list items!
+	   if ('' == trim($list_items)) {
+		  return '';
+	   }
+	   // ...otherwise, return the list
+	   return '<div class="old" style="margin-left:20px;">' . $list_items . '</div>';
+	   // return '<ul style="margin-left:15px;">' . $list_items . '</ul>';
+	}
+	
+	$category = category_list('', $AllQuestions);
+	echo $category;	 ?>
+	</div>	
+	<?php } ?>	
+	  <input type="hidden" id="result_no" value="5">
+	  <input type="hidden" id="forum_id" value="<?php echo $cat1['forum_id'];?>">
+      <?php if($cnt>=50) { ?>
+	  <input type="button" class="loadmore" id="load" value="Load More... Results">
+	<?php  } 
+$currentTimestamp = Mage::getModel('core/date')->timestamp(time());
+$currentDate = date("y-m-d h:i:s", $currentTimestamp);
+?>
+<div id="hiddenForm" style="display:none">
+
+<div id="demo" style="position:relative;-webkit-transition: all 0.5s ease-out;display:none;margin-left: 50px;margin-right: 50px;margin-bottom: 5px; background-color: #D3E7F5;height: auto;padding: 6px;width: 400px;">
+<a id="closeForm" style="color: #071F2F;background: #7BA9CA;width: 20px;height: 20px;border-radius: 50%;padding: 0px 0px 0px 6px;position: absolute;top: -10px;right: -10px;cursor: pointer;text-decoration: none;font-size: 13px;font-weight: normal;
+    box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.5);">x</a>
+<form action= "<?php echo $urlanswer;?> class="validateForm" name="aform"  method="post">
+<input type="hidden" name="ans_id" id="ans_id" value=""/>
+<input type="hidden" name="product" value="<?=$cat1['product']?>"/>
+<input type="hidden" name="ctype" value="<?=$value?>"/>
+<input type="hidden" name="status" value="<?=$status?>"/>
+<input type="hidden" name="ctype" value="<?=$value?>"/>
+<label for="name"><small>Name (required)</small></label>
+<input type="text" name="store_id" value="" tabindex="1" required/><p>
+<label for="email"><small>Mail (will not be published) (required)</small></label></p>
+<input type="hidden" name="topic_id" value="<?=$orderID?>" /><p>
+<input type="hidden" name="date" value="<?php echo $currentDate; ?>" />
+<input type="email" tabindex="2" size="22" value="" id="email" name="email" required>
+<label for="Message"><small>Message (required)</small></label>
+<textarea style="width:390px; height:50px;" name="answer" tabindex="3" id="comment" required></textarea><br />
+<div class="xyz"><?= $demo ?></div>
+<div class="forum-form-row"><input type="submit" value="Comment" /></div>
+</form>
+</div></div>
+
+			
+<div id="respond"><h3 class="widget-title">Post Your Question:</h3>
+<div class="cancel-comment-reply"> 
+</div>
+<form id="commentform" method="post" action="<?php echo $urlmain;?>" name="cform" onSubmit="return validate()">
+<div class="forum-form-row"><label for="author">Name (required)</label></div>
+<div class="forum-form-row"><input type="text"  size="22" value="" id="author" name="store_id" tabindex="4"></div> 
+<div class="forum-form-row"><input type="hidden" name="topic_id" value="<?=$orderID ?>"/></div>
+<div class="forum-form-row"><input type="hidden" name="status" value="<?=$status?>"/></div>
+<div class="forum-form-row">Mail (will not be published) (required)</div>
+<div class="forum-form-row"><input type="text" size="22" value="" id="url" name="email" tabindex="5"></div>
+<div class="forum-form-row">Question (required)</div>
+<div class="forum-form-row">
+<textarea rows="5" cols="38" id="comment2" name="questions" tabindex="6" ></textarea> </div>
+<div class="forum-form-row"><input type="hidden" value="<?=$value?>" name="ctype">
+<input type="hidden" name="date" value="<?php echo $currentDate; ?>" />
+<input type="hidden" value="<?=$product_name?>" name="product">
+</div>
+<div class="xyz"><?php echo $this->getChildHtml('captcha') ?></div>  
+<div class="forum-form-row"><input type="submit" value="Submit Comment" id="submit" name="submit"></div>
+</form>
+</div>	
+</div>
+	</div>
+		</div>
+			</div>
+			
+	<div style="display:none;" class="nav_up" id="nav_up"></div>
+	<div style="display:none;" class="nav_down" id="nav_down"></div>
+    <script src="<?php echo $this->getSkinUrl('js/forum/query-1.3.2.js')?>" type="text/javascript"></script>
+	<script src="<?php echo $this->getSkinUrl('js/forum/scroll-startstop.events.jquery.js')?>" type="text/javascript"></script>
+		<script>
+			$(function() {
+				var $elem = $('#forum-page');
+				
+				$('#nav_up').fadeIn('slow');
+				$('#nav_down').fadeIn('slow');  
+				
+				$(window).bind('scrollstart', function(){
+					$('#nav_up,#nav_down').stop().animate({'opacity':'0.2'});
+				});
+				$(window).bind('scrollstop', function(){
+					$('#nav_up,#nav_down').stop().animate({'opacity':'1'});
+				});
+				
+				$('#nav_down').click(
+					function (e) {
+						$('html, body').animate({scrollTop: $elem.height()}, 800);
+					}
+				);
+				$('#nav_up').click(
+					function (e) {
+						$('html, body').animate({scrollTop: '0px'}, 800);
+					}
+				);
+            });
+        </script>	
+			
+                </article>
+						</div>
+							</section>
+									</div>
+									
+        <?php echo $this->getChildHtml('footer_before') ?>
+        <?php echo $this->getChildHtml('footer') ?>
+        <?php echo $this->getChildHtml('global_cookie_notice') ?>
+        <?php echo $this->getChildHtml('before_body_end') ?>
+ </div>
+<?php echo $this->getAbsoluteFooter() ?>
+</body>
+</html>
+
+
+
+

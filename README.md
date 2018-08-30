@@ -1,0 +1,1 @@
+This extension allows you to create a Forum in your Magento store using infinite user level commenting with Approval process

@@ -1,0 +1,195 @@
+<?php
+/**
+* Virtual Employee Forum
+* 
+* @category     VE
+* @package      Ve_Forum
+* @copyright    Copyright (c) 2016 VE (http://www.virtualemployee.com/)
+* @author       VE (Magento Team)
+* @version      Release: 1.0.0.1
+*/
+?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+
+<script type="text/javascript">
+ function show_parent_category(){
+	   var x = document.getElementById("store").value;
+           new Ajax.Request("<?php echo  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/kj') ; ?>", {
+               method: 'Post',
+               parameters: {store:x},
+               onComplete: function(transport) {
+				 var container = document.getElementById("pc");
+                container.innerHTML = transport.responseText;
+
+               }
+           });
+           new Ajax.Request("<?php echo  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/workjkkjjk') ; ?>", {
+               method: 'Post',
+			   parameters: {store:x},
+               onComplete: function(transport) {
+				 var container = document.getElementById("topic");
+                container.innerHTML = transport.responseText;
+
+               }
+           });
+       }
+</script>
+<script type="text/javascript">
+ function show_sub_category(){
+	   var x = document.getElementById("pc").value;
+           new Ajax.Request("<?php echo  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/jkkj') ; ?>", {
+               method: 'Post',
+               parameters: {pc:x},
+               onComplete: function(transport) {
+				var container = document.getElementById("textfield2");
+				var option = eval ("(" + transport.responseText + ")");
+                container.innerHTML = option[0];
+				var product = document.getElementById("textfield3");
+                product.innerHTML = option[1];
+			 }
+           });
+       }
+</script>
+<script type="text/javascript">
+ function show_product_category(){
+	   var x = document.getElementById("textfield2").value;
+           new Ajax.Request("<?php echo  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/workjkkj') ; ?>", {
+               method: 'Post',
+			    parameters: {textfield2:x},
+               onComplete: function(transport) {
+				   
+				 var container = document.getElementById("textfield3");
+                container.innerHTML = transport.responseText;
+
+               }
+           });
+       }
+</script>
+</head>
+
+<body>
+
+
+<?php
+$admin_user_session = Mage::getSingleton('admin/session');
+$adminuserId = $admin_user_session->getUser()->getUserId();
+$userArray = Mage::getSingleton('admin/session')->getData();
+$user = Mage::getSingleton('admin/session'); 
+$userUsername = $user->getUser()->getName();
+$url =  Mage::helper('adminhtml')->getUrl('adminhtml/forumbackend/panne') ;
+?>
+    <div style="margin: 0 auto; width: 50%; border: 1px solid #CCC; padding: 12px;background-color: rgb(246, 246, 246);">
+<form name="sbt" method="post" action="<?php echo $url;?> ">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+      <th style="border-bottom: 1px #CCC dashed ;padding-bottom:10px;">Forum Topic</th>
+	<td><input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" /></td>
+	<td><input name="userid" type="hidden" value="<?php echo $userUsername;?>" /></td>
+	
+  </tr>
+  
+  <tr>
+    <td valign="top" style="padding:10px 0;"><table width="100%" border="0" cellspacing="5" cellpadding="5">
+	
+	
+	<?php   
+    $currentDate = date("Y-m-d h:i:s", Mage::getModel('core/date')->timestamp(time()));
+    $read = Mage::getSingleton('core/resource')->getConnection('core_read');
+	$write = Mage::getSingleton('core/resource')->getConnection('core_write'); 
+	$result = $read->fetchAll("select * from core_store_group WHERE root_category_id!=0");
+	 ?>
+        <td class="label" width="18%" style="vertical-align:middle;padding:5px 0">Store Name</td>
+        <td width="82%">  <select name="store" id="store" onchange="show_parent_category()" style="width:36%">
+                                <option value="" selected="selected">Select Store</option>
+                                <?php 
+					foreach($result as $cat1) {
+						
+						?>
+											<option value="<?=ucwords($cat1['website_id'])?>"><?=ucwords($cat1['name'])?></option>
+									<?php 
+									}?>
+                            </select></td>
+      </tr>
+	  <tr>
+	
+        <td class="label" width="18%" style="vertical-align:middle;padding:5px 0">Forum Category</td>
+        <td width="82%">  
+		<select name="topic" id="topic" style="width:36%" >
+                                <option value="" selected="selected">Select Forum Category</option>
+                            </select></td>
+      </tr>
+	
+	<tr>
+      <tr>
+        <td class="label" width="18%" style="vertical-align:middle;padding:5px 0">Parent Category</td>
+        <td width="82%">
+		<p id="demo"></p>
+		<select name="pc" id="pc" onchange="show_sub_category()" style="width:36%">
+                                <option value="" selected="selected">Select Parent Category</option>
+                       </select></td>
+      </tr>
+      <tr>
+        <td style="vertical-align:middle;padding:5px 0">Sub Category</td>
+        <td><select name="textfield2" id="textfield2" onchange="show_product_category()" style="width:36%">
+                                <option value="" selected="selected">Select Sub Category</option>
+                       </select></td>
+      </tr>
+      <tr>
+        <td style="vertical-align:middle;padding:5px 0">Product</td>
+        <td><select name="textfield3" id="textfield3" style="width:36%">
+                                <option value="" selected="selected">Select Product</option>
+                       </select></td>
+      </tr>
+      <tr>
+        <td style="vertical-align:middle;padding:5px 0 25px">Forum Topic</td>
+        <td style="padding-bottom:15px;"><textarea name="textfield4" id="textfield4"  style="width:35%"/> </textarea>
+		</td>
+      </tr>
+	  
+	  <tr>
+	  <td colspan="2" style="border-top:1px solid rgb(128, 128, 128);"></td>
+	  </tr>
+	  
+	  
+      <tr>
+        <td align="right" style="vertical-align:middle;padding:5px 0">&nbsp;</td>
+        <td style="vertical-align:middle;padding:11px 0 0"><button class="btn btn-primary"  name="submit" type="submit" onclick="return validateForm()" >Add Topic</button></td>
+      </tr>
+    </table></td>
+  </tr>
+  
+</table>
+<input type="hidden" name="date" value="<?php echo $currentDate;?>" />
+</form>
+    </div>
+	
+	<script type="text/javascript">
+function validateForm() {
+
+     if (document.getElementById('store').value =='') {
+        alert("Please select store before create forum topic.");
+        return false;
+    }
+	 
+    if (document.getElementById('topic').value =='') {
+        alert("Please select/create forum category before create forum topic.");
+        return false;
+    }
+	  if (document.getElementById('pc').value =='') {
+        alert("Please select parent category before create forum topic.");
+        return false;
+    }
+	  if (document.getElementById('textfield3').value =='') {
+        alert("Please select product name for a topic.");
+        return false;
+    }
+}
+</script>
+	
+</body>
+</html>

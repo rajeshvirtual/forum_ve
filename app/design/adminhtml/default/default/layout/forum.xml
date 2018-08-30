@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+
+ <adminhtml_forumbackend_add>
+	<reference name="content">
+	  <block type="forum/adminhtml_forumbackend" name="forumbackend2" template="forum/forumbackend2.phtml"/>
+	</reference>
+  </adminhtml_forumbackend_add> 
+  
+   <adminhtml_forumbackend_que>
+	<reference name="content">
+	  <block type="forum/adminhtml_forumbackend" name="forumbackend1" template="forum/forumbackend3.phtml"/>
+	</reference>
+  </adminhtml_forumbackend_que>
+  
+   <adminhtml_forumbackend_ans>
+	<reference name="content">
+	  <block type="forum/adminhtml_forumbackend" name="forumbackend1" template="forum/forumbackend4.phtml"/>
+	</reference>
+  </adminhtml_forumbackend_ans>
+  
+    <adminhtml_forumbackend_jitendra>
+	<reference name="content">
+	  <block type="forum/adminhtml_forumbackend" name="forumbackend1" template="forum/forumbackend.phtml"/>
+	</reference>
+  </adminhtml_forumbackend_jitendra>
+  
+   <adminhtml_forumbackend_panne>
+	<reference name="content">
+	  <block type="forum/adminhtml_forumbackend" name="forumbackend1" template="forum/forumbackend2.phtml"/>
+	</reference>
+  </adminhtml_forumbackend_panne>
+  
+   <adminhtml_forumbackend_edit>
+	<reference name="content">
+	  <block type="forum/adminhtml_forumbackend" name="forumbackend1" template="forum/forumbackend5.phtml"/>
+	</reference>
+  </adminhtml_forumbackend_edit>
+  
+   <adminhtml_forumbackend_edit2>
+	<reference name="content">
+	  <block type="forum/adminhtml_forumbackend" name="forumbackend1" template="forum/forumbackend6.phtml"/>
+	</reference>
+  </adminhtml_forumbackend_edit2>
+  
+   <adminhtml_forumbackend_manageedit>
+	<reference name="content">
+	  <block type="forum/adminhtml_forumbackend" name="forumbackend9" template="forum/forumbackend9.phtml"/>
+	</reference>
+  </adminhtml_forumbackend_manageedit>
+  
+  <adminhtml_order_new>
+	<reference name="content">
+	  <block type="forum/adminhtml_sales_order" name="forumbackendnew" template="forum/forumbackend2.phtml"/>
+	</reference>
+  </adminhtml_order_new>
+  
+</layout>

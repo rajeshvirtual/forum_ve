@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <menu>
+	  <forum module="forum">
+		<title>Forum</title>
+		<sort_order>100</sort_order>
+		<children>
+		  <forumbackend13 module="forum">
+			<title>Add Forum Category</title>
+			<sort_order>0</sort_order>
+			<action>adminhtml/forumbackend/</action>
+			<children>
+		  <forumbackendcat module="forum">
+			<title>Manage Forum Category</title>
+			<sort_order>1</sort_order>
+			<action>adminhtml/order/mcat</action>
+		  </forumbackendcat>
+		</children>
+		  </forumbackend13>
+		</children>
+		<children>
+		  <forumbackend module="forum">
+			<title>Forum Topic</title>
+			<sort_order>1</sort_order>
+			<children>
+		  <forumbackend2 module="forum">
+			<title>Manage Forum Topic</title>
+			<sort_order>1</sort_order>
+			<action>adminhtml/order/</action>
+		  </forumbackend2>
+		</children>
+		<children>
+		  <forumbackend3 module="forum">
+			<title>Add Forum Topic</title>
+			<sort_order>2</sort_order>
+			<action>adminhtml/forumbackend/add</action>
+		  </forumbackend3>
+		</children>
+		  </forumbackend>
+		</children>
+		<children>
+		  <forumbackend4 module="forum">
+			<title>Manage Questions</title>
+			<sort_order>2</sort_order>
+			<action>adminhtml/order/que</action>
+		  </forumbackend4>
+		</children>
+		
+		<children>
+		  <forumbackend5 module="forum">
+			<title>Manage Answers</title>
+			<sort_order>3</sort_order>
+			<action>adminhtml/order/ans</action>
+		  </forumbackend5>
+		</children>
+	  </forum>
+	</menu>
+    <acl>
+	  <resources>
+		<all>
+		  <title>Allow Everything</title>
+		</all>
+		<admin>
+		  <children>
+			<forum translate="title" module="forum">
+			  <title>Forum</title>
+			  <sort_order>1000</sort_order>
+			  <children>
+		  <forumbackend13 translate="title">
+			<title>Forum category</title>
+			 <sort_order>1001</sort_order>
+			 <children>
+		  <forumbackendcat module="forum">
+			<title>Manage Forum Category</title>
+			<sort_order>1014</sort_order>
+		  </forumbackendcat>
+		</children>
+		  </forumbackend13>
+			  </children>
+			   <children>
+		  <forumbackend translate="title">
+			<title>Forum Topic</title>
+			 <sort_order>1002</sort_order>
+		     <children>
+		  <forumbackend2 translate="title">
+			<title>Manage Forum Topic</title>
+			 <sort_order>1003</sort_order>
+		  </forumbackend2>
+			  </children>
+			   <children>
+		  <forumbackend3 translate="title">
+			<title>Add Forum Topic</title>
+			 <sort_order>1004</sort_order>
+		  </forumbackend3>
+			  </children>
+			   
+			  </forumbackend>
+			 </children>
+			   <children>
+		  <forumbackend4 translate="title">
+			<title>Manage Questions</title>
+			 <sort_order>1005</sort_order>
+		  </forumbackend4>
+			  </children>
+			    <children>
+		  <forumbackend5 translate="title">
+			<title>Manage Answers</title>
+			 <sort_order>1006</sort_order>
+		  </forumbackend5>
+			  </children>
+			</forum>
+		  </children>
+		   <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <forum translate="title" module="forum">
+                                        <title>VE Forum </title>
+                                    </forum>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+		</admin>
+	  </resources>
+	</acl>
+	
+	
+</config>

@@ -1,0 +1,126 @@
+<?xml version="1.0"?>
+<config>
+  <modules>
+    <Ve_Forum>
+      <version>1.0.0.1</version>
+    </Ve_Forum>
+  </modules>
+  <frontend>
+    <routers>
+      <forum>
+        <use>standard</use>
+          <args>
+            <module>Ve_Forum</module>
+            <frontName>forum</frontName>
+          </args>
+      </forum>
+    </routers>
+		<layout>
+		  <updates>
+			<forum>
+			  <file>forum.xml</file>
+			</forum>
+		  </updates>
+		</layout>
+  </frontend>
+  <adminhtml>
+  <layout>
+	  <updates>
+		<forum>
+		  <file>forum.xml</file>
+		</forum>
+	  </updates>
+	</layout>
+	</adminhtml>
+  <global>
+  <template>
+		<email>
+			<custom_email module="forum">
+				<label>custom email</label>
+				<file>custom_email.html</file>
+				<type>html</type>
+			</custom_email>
+			<custom_email_front module="forum">
+				<label>custom email user</label>
+				<file>custom_email_user.html</file>
+				<type>html</type>
+			</custom_email_front>
+		</email>
+  </template>
+  
+  <models>
+            <forum_adminhtml>
+                <class>Ve_Forum_adminhtml_Model</class>
+            </forum_adminhtml>
+        </models>
+   <models>
+            <ve_forum>
+                <class>Ve_Forum_Model</class>
+                <resourceModel>ve_forum_resource</resourceModel>
+            </ve_forum>
+            <ve_forum_resource>
+                <class>Ve_Forum_Model_Resource</class>
+                <entities>
+                    <forum>
+                        <table>forum</table>
+                    </forum>
+					<cat>
+                        <table>cat</table>
+                    </cat>
+					<qa>
+                        <table>qa</table>
+                    </qa>
+                </entities>
+            </ve_forum_resource>
+        </models>
+		<resources>
+            <ve_forum_setup> 
+                <setup>
+                    <module>Ve_Forum</module>  
+                    <connection>
+                        <use>core_setup</use>
+                    </connection> 
+                </setup>   
+            </ve_forum_setup>   
+            <ve_forum_write> 
+                <connection> 
+                    <use>core_write</use> 
+                </connection>
+            </ve_forum_write>  
+            <ve_forum_read>
+                <connection> 
+                    <use>core_read</use> 
+                </connection> 
+            </ve_forum_read>    
+        </resources>
+    <helpers>
+      <forum>
+        <class>Ve_Forum_Helper</class>
+      </forum>
+    </helpers>
+	<blocks>
+	  <forum>
+		<class>Ve_Forum_Block</class>
+	  </forum>
+	</blocks>
+	
+	<helpers>
+            <ve_forum>
+                <!-- Helper definition needed by Magento -->
+                <class>Mage_Core_Helper</class>
+            </ve_forum>
+        </helpers>
+		
+</global>
+  <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <ve_forum before="Mage_Adminhtml">Ve_Forum_Adminhtml</ve_forum>
+                    </modules>
+                </args>
+			</adminhtml>
+        </routers>
+    </admin>
+ </config> 
